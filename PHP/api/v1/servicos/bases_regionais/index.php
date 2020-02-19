@@ -28,7 +28,7 @@
                     echo(
                         json_encode (
                             array(
-                                "ID" => $post_url_id,
+                                "id" => $post_url_id,
                                 "method" => $post_url_method,
                                 "Resource" => $post_url_resource,
                                 "Bases"=>getNumBases(),
