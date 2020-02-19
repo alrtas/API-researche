@@ -1,6 +1,6 @@
 Como usar
 
-POST
+METODO = POST
 URL = http://sgi.intelbras.com.br/api/v1/servicos/bases_regionais/
   Headers
     Content-Type = applciation/json
@@ -16,8 +16,7 @@ URL = http://sgi.intelbras.com.br/api/v1/servicos/bases_regionais/
 Parametro resource pode variar entre "all","status","sla","bases"
 
 
-RESPOSTA:
-STATUS 200 OK
+RESPOSTA = STATUS 200 OK
 {
     "id": "e6e1433b-70d0-4fcb-8bf7-cd4eeb99a5ae",
     "method": "get",
