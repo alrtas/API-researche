@@ -27,9 +27,22 @@ RESPOSTA = STATUS 200 OK
         "Status": "Operacional",
         "Atualizada": "18-02-2020 22:14:42",
         "SLA": 100,
-        "Online": 30,
-        "Offline": 0,
-        "Bases_Offline": null
+        "Online": 27,
+        "Offline": 3,
+        "Bases_Offline": [
+            {
+                "Base": "6540529844",
+                "Status": "Indisponivel"
+            },
+            {
+                "Base": "6740639182",
+                "Status": "Indisponivel"
+            },
+            {
+                "Base": "1940421779",
+                "Status": "Nao Atendida"
+            }
+	]
     }
 }
 
