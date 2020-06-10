@@ -1,0 +1,245 @@
+swagger: "2.0"
+info:
+  description: "Documentação para API utilizadas juntamente ao serviço de ChatBot via WhatsApp e WebChat fornecido pela Take. Para utilização destas API's deve ser gerado seu  `token` previamente no WSO2."
+  version: "1.0.0"
+  title: "API Blip Callcenter"
+  contact:
+    email: "thiago.albertom@intelbras.com.br"
+host: "sgi.intelbras.com.br"
+basePath: "/api/blip/"
+tags:
+- name: "Feriados"
+  description: "Tudo sobre os feriados"
+- name: "Manutenções"
+  description: "Tudo sobre as manutenções"
+schemes:
+- "http"
+paths:
+  /feriados/v1.0.0/:
+    get:
+      tags:
+      - "Feriados"
+      summary: "Verifica se existe um feriado"
+      description: "Retorna dados sobre a data informada"
+      operationId: "getHoliday"
+      consumes:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "date"
+        type: "string"
+        description: "Data no formato DD/MM/AAAA"
+        allowEmptyValue: true
+      responses:
+        "200":
+          description: "É feriado"
+          schema:
+            $ref: "#/definitions/Feriado"
+        "500":
+          description: "Erro no servidor"
+        "404":
+          description: "Não é feriado"
+        "400":
+          description: "Parametros inválidos"
+      security:
+      - Authorization: []
+    delete:
+      tags:
+      - "Feriados"
+      summary: "Deleta um feriado"
+      description: "Deleta o feriado com base na data passada"
+      operationId: "deleteHoliday"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "date"
+        type: "string"
+        required: true
+      responses:
+        "200":
+          description: "Feriado excluido com sucesso"
+        "400":
+          description: "Parametros inválidos"
+        "404":
+          description: "Não existe feriado criado nesta data"
+      security:
+      - Authorization: []
+    post:
+      tags:
+      - "Feriados"
+      summary: "Adiciona um novo feriado"
+      description: ""
+      operationId: "createUsersWithListInput"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Adiciona um novo feriado passando os seguintes parametros"
+        required: true
+        schema:
+          $ref: "#/definitions/Feriado"
+      responses:
+        "200":
+          description: "Feriado criado com sucesso"
+        "400":
+          description: "Parametros inválidos"
+        "500":
+          description: "Erro no servidor"
+      security:
+      - Authorization: []
+  /manutencao/v1.0.0/:
+    get:
+      tags:
+      - "Manutenções"
+      summary: "Verifica se existe manutenção agendada"
+      description: "Retorna validação se existe manutenção ou não na data informada pela query date, caso ela não seja preenchida, busca na data de hoje"
+      operationId: "getMaintence"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "date"
+        in: "query"
+        description: "No formato DD/MM/AAAA"
+        type: "string"
+        allowEmptyValue: true
+      responses:
+        "200":
+          description: "É feriado"
+          schema:
+            $ref: "#/definitions/Manutencao"
+        "500":
+          description: "Erro no servidor"
+        "404":
+          description: "Não é feriado"
+        "400":
+          description: "Parametros inválidos"
+      security:
+      - Authorization: []
+    post:
+      tags:
+      - "Manutenções"
+      summary: "Agenda uma nova manutenção"
+      description: ""
+      operationId: "createMaintance"
+      consumes:
+       - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "List of user object"
+        required: true
+        schema:
+          $ref: "#/definitions/Manutencao"
+      responses:
+        "200":
+          description: "Agendado manutenção com sucesso"
+        "400":
+          description: "Parametros inválidos"
+        "500":
+          description: "Erro no servidor"
+      security:
+      - Authorization: []
+    delete:
+      tags:
+      - "Manutenções"
+      summary: "Deleta uma manutenção agendada"
+      description: ""
+      operationId: "deleteMaintance"
+      consumes:
+       - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "List of user object"
+        required: true
+        schema:
+          $ref: "#/definitions/deleteManutencao"
+      responses:
+        "200":
+          description: "Deletado manutenção com sucesso"
+        "400":
+          description: "Parametros inválidos"
+        "500":
+          description: "Erro no servidor"
+      security:
+      - Authorization: []
+
+
+
+securityDefinitions:
+  Authorization:
+    type: "apiKey"
+    name: "Authorization"
+    in: "header"
+    description: "Token WSO2"
+    
+
+definitions:
+  Feriado:
+    type: "object"
+    required:
+    - "name"
+    - "data"
+    properties:
+      date:
+        type: "string"
+        example: "11/06/2020"
+      name:
+        type: "string"
+        example: "Corpus Christi"
+      code:
+        type: "integer"
+        example: "1"
+      description:
+        type: "string"
+        example: "Feriado nacional"
+  Manutencao:
+    type: "object"
+    required:
+    - "name"
+    - "start"
+    - "end"
+    - "date"
+    properties:
+      date:
+        type: "string"
+        example: "11/06/2020"
+      name:
+        type: "string"
+        example: "Alteração de rota no ICC"
+      code:
+        type: "integer"
+        example: "5"
+      start:
+        type: "string"
+        example: "11:40"
+      end:
+        type: "string"
+        example: "15:30"
+      description:
+        type: "string"
+        example: "Alteração de rotas entre a CIP 92200 e o IPack"
+  deleteManutencao:
+    type: "object"
+    required:
+    - "start"
+    - "end"
+    - "date"
+    properties:
+      date:
+        type: "string"
+        example: "11/06/2020"
+      start:
+        type: "string"
+        example: "11:40"
+      end:
+        type: "string"
+        example: "15:30"

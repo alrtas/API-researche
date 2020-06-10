@@ -25,13 +25,13 @@
             if($id_blip  == '1'){  
                 switch ($fila['CAMPANHA']) {
                     case 'CONDOMINIAL':
-                        $fila['CAMPANHA'] = 'ComunicaÃ§Ã£o condominial';
+                        $fila['CAMPANHA'] = 'Comunicação condominial';
                         break;
                     case 'ALARMES':
                         $fila['CAMPANHA'] = 'Alarmes';
                     break;
                     case 'ANALOGICO':
-                        $fila['CAMPANHA'] = 'Centrais analÃ³gicas';
+                        $fila['CAMPANHA'] = 'Centrais analógicas';
                     break;
                     case 'BACK_OFFICE':
                         $fila['CAMPANHA'] = 'default';
@@ -49,13 +49,13 @@
                         $fila['CAMPANHA'] = 'Controle de acesso corporativo';
                     break;
                     case 'IFIRE':
-                        $fila['CAMPANHA'] = 'IncÃªndio e IluminaÃ§Ã£o';
+                        $fila['CAMPANHA'] = 'Incêndio e Iluminação';
                     break;  
                     case 'MIBO':
                         $fila['CAMPANHA'] = 'Linha Mibo';
                     break; 
                     case 'OUTDOOR':
-                        $fila['CAMPANHA'] = 'RÃ¡dios switches e linha PON';
+                        $fila['CAMPANHA'] = 'Rádios switches e linha PON';
                     break;  
                     case 'PORTEIROS':
                         $fila['CAMPANHA'] = 'Fechaduras e porteiros residenciais';

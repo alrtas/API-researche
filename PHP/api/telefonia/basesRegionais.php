@@ -32,7 +32,9 @@
                                 "method" => $post_url_method,
                                 "Resource" => $post_url_resource,
                                 "Bases"=>getNumBases(),
-                                "Operacao" => getStatus()
+                                "SLA do dia" => getSlaDay(),
+                                "Operacao" => getStatus(),
+                                "Detalhes" => getSLAbases()
                             )
                         )
                     );
@@ -85,8 +87,25 @@
         else{foreach($fila as $row){$sum_bases = $sum_bases+1;}return $sum_bases;}
     }
 
-    function getSla(){
+    function getSlaDay(){
         $query_status = "SELECT `data`,`base`,`status`,CASE `status`WHEN 'Atendida' THEN 1 END AS 'online' FROM `atividades`.`telefonia` WHERE `data` LIKE CONCAT((DATE_FORMAT(NOW(), '%d-%m-%Y')), '%') ORDER BY `data` DESC;";
+        $fila = getArray($query_status);
+        $testes = 0;
+        $on = 0;
+        $off = 0;
+        foreach($fila as $row){
+            if ($row["status"] == "Atendida"){
+                $testes = $testes+1;
+                $on = $on +1;
+            }
+            else{
+                $testes = $testes+1;
+                $off = $off +1;
+            } 
+        }
+        $sla = ($on/$testes)*100;
+
+        return number_format($sla, 2, '.', ',').'%';
     }
 
     function getStatus(){
@@ -97,7 +116,10 @@
         foreach($fila as $row){
             if ($row["status"] == "Atendida"){$bases_online = $bases_online +1;}
             else{
-                $bases_offline=array('Base'=>$row["base"]);
+                $bases_offline[]=array(
+                    'Base'=>$row["base"],
+                    'Status'=>$row["status"]
+                );
             }
         }
         if($bases_online == $bases){$status = 'Operacional';}
@@ -111,11 +133,40 @@
         return array(
             "Status"=>$status,
             "Atualizada"=>$fila[0]["data"],
-            "SLA"=>$slaDay,
+            "SLA do teste"=>number_format($slaDay, 2, '.', ',').'%',
             "Online"=>$bases_online,
             "Offline"=>$offline,
             "Bases_Offline"=>$bases_offline
         );
     }
 
+    function getSLAbases(){
+        $query_status = "SELECT * FROM atividades.telefonia WHERE `data` LIKE CONCAT((DATE_FORMAT(NOW(), '%d-%m-%Y')), '%') GROUP BY `BASE` ORDER BY `data` DESC;";
+        $fila = getArray($query_status); 
+        foreach($fila as $row){
+            $on = 0;
+            $testes = 0;
+            $base = $row["base"];
+            $query_base = "SELECT `data`,`base`,`status`,CASE `status`WHEN 'Atendida' THEN 1 END AS 'online' FROM `atividades`.`telefonia` WHERE `data` LIKE CONCAT((DATE_FORMAT(NOW(), '%d-%m-%Y')), '%') AND `base` = '$base' ORDER BY `data` DESC;";
+            $result =  getArray($query_base);
+           foreach($result as $row1){
+                if($row1["status"] == "Atendida"){
+                    $testes = $testes+1;
+                    $on = $on +1;
+                }else{
+                    $testes = $testes+1;
+                }
+            }
+            
+            $sla = ($on/$testes)*100;
+            
+            $result_base[] = array(
+                'Base' => $base,
+                'Testes' => $testes,
+                'Sucesso' => $on,
+                'SLA da base' => number_format($sla, 2, '.', ',').'%'
+            );
+        }
+        return $result_base;
+    }
 ?>
